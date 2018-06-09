@@ -439,7 +439,7 @@ class DNSQuery
         stream_set_timeout($socket, $this->timeout);
 
         // Split Into Labels
-        if (preg_match('/[a-z|A-Z]/', $question) == 0 && $question != '.') { // IP Address
+        if (preg_match('/\\p{L}/u', $question) == 0 && $question != '.') { // IP Address
             // reverse ARPA format
             $labels = array_reverse(explode('.', $question));
             $labels[] = 'IN-ADDR';
@@ -448,7 +448,7 @@ class DNSQuery
             if ($question == '.') {
                 $labels = array('');
             } else { // hostname
-                $labels = explode('.', $question);
+                $labels = explode('.', idn_to_ascii($question));
             }
         }
 
